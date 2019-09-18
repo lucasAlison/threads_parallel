@@ -1,5 +1,5 @@
-// mpicc go_mpi.c -o go_mpi
-// mpirun -n 4 go_mpi
+// mpicc mpi_matriz.c -o mpi_matriz
+// mpirun -n 1 mpi_matriz
 
 #include <stdio.h>
 #include <mpi.h>
