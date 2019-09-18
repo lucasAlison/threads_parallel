@@ -1,13 +1,20 @@
 
 #include <stdio.h>
 #include <omp.h>
+#include <time.h>
+
+/*
+*
+*   gcc -fopenmp -o omp_matriz omp_matriz.c
+*
+*/
 
 int matrizA[2][3],matrizB[3][2],matrizC[2][3];
+struct timespec t, t_inicio;
 
 int main(int argc, char **argv)
 {
-  int i, thread_id, nloops;
-
+    int i, thread_id, nloops;
     matrizA[0][0] = 1;
     matrizA[0][1] = 2;
     matrizA[0][2] = 3;
@@ -21,6 +28,7 @@ int main(int argc, char **argv)
     matrizB[2][0] = 5;
     matrizB[2][1] = 6;   
     int glob_nloops = 0;
+    clock_gettime(CLOCK_MONOTONIC ,&t);
     #pragma omp parallel private(thread_id) reduction(+:glob_nloops)
     { 
         #pragma omp for
@@ -31,10 +39,12 @@ int main(int argc, char **argv)
         }
         
     }
+    clock_gettime(CLOCK_MONOTONIC ,&t_inicio);
     for (int i = 0; i<2; i++){
         for (int j = 0; j<3; j++){
             printf("matrizC[%d][%d] = %d \n",i,j,matrizC[i][j]);
         }
     }
+    printf("inicio: %ld, fim: %ld = %ld",t.tv_nsec,t_inicio.tv_nsec,(t_inicio.tv_nsec-t.tv_nsec));
   return 0;
 }

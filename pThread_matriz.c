@@ -1,9 +1,16 @@
 #include	<pthread.h>
 #include	<stdio.h>
 #include	<unistd.h>
+#include <time.h>
+
+/*
+*
+*   gcc -o pThread_matriz pThread_matriz.c -lpthread
+*
+*/
 
 int matrizA[2][3],matrizB[3][2],matrizC[2][3];
-
+struct timespec t, t_inicio;
 
 
 void montarMatrizA() {
@@ -58,16 +65,17 @@ int main() {
             printf("matrizB[%d][%d] = %d\n",i,j,matrizB[i][j]);
         }
     }
-    
+    clock_gettime(CLOCK_MONOTONIC ,&t);
     pthread_create(&t1, NULL, (void *) tarefa_1, NULL);
     pthread_create(&t2, NULL, (void *) tarefa_2, NULL);
 
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
-    
+    clock_gettime(CLOCK_MONOTONIC ,&t_inicio);
     for (int i = 0; i<2; i++){
         for (int j = 0; j<3; j++){
             printf("matrizC[%d][%d] = %d \n",i,j,matrizC[i][j]);
         }
     }
+    printf("inicio: %ld, fim: %ld = %ld",t.tv_nsec,t_inicio.tv_nsec,(t_inicio.tv_nsec-t.tv_nsec));
 }

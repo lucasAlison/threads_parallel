@@ -1,6 +1,14 @@
-#include<stdio.h>
+#include <stdio.h>
+#include <time.h>
+
+/*
+*
+*  gcc -o single_thread single_thread.c
+*
+*/
 
 int matrizA[2][3],matrizB[3][2],matrizC[2][3];
+
 
 void montarMatrizA() {
     matrizA[0][0] = 1;
@@ -33,7 +41,11 @@ int main() {
     
     montarMatrizA();
     montarMatrizB();
+    struct timespec t, t_inicio;
+
+    clock_gettime(CLOCK_MONOTONIC ,&t);
     multiplicaMatriz();
+    clock_gettime(CLOCK_MONOTONIC ,&t_inicio);
     for (int i = 0; i<2; i++){
         for (int j = 0; j<3; j++){
             printf("matrizA[%d][%d] = %d\n",i,j,matrizA[i][j]);
@@ -49,4 +61,5 @@ int main() {
             printf("matrizC[%d][%d] = %d \n",i,j,matrizC[i][j]);
         }
     }
+    printf("inicio: %ld, fim: %ld = %ld",t.tv_nsec,t_inicio.tv_nsec,(t_inicio.tv_nsec-t.tv_nsec));
 }
